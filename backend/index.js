@@ -1,9 +1,11 @@
 import express from 'express';
 import { collectionName, connection } from './dbconfig.js';
+import cors from 'cors'
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 // POST - http://localhost:3200/add-task
 // Add task api - Body - JSON
