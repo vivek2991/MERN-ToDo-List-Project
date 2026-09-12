@@ -54,6 +54,28 @@ app.get("/tasks", async (req, resp) => {
     }
 })
 
+// API for auto populate when click on update button of any task
+// GET - http://localhost:3200/task/6aa4f0a15b600b013edf12b1
+app.get("/task/:id", async (req, resp) => {
+    const db = await connection();
+    const id = req.params.id;
+    const collection = await db.collection(collectionName);
+    const result = await collection.findOne({_id:new ObjectId(id)});
+    
+    if(result){
+        resp.send({
+            message: 'Task fetched',
+            success: true,
+            result: result
+        })
+    } else{
+        resp.send({
+            message: 'Error! Try after some time.',
+            success: false
+        })
+    }
+})
+
 // API for delete single task
 // delete - http://localhost:3200/delete/id
 app.delete("/delete/:id", async (req, resp) => {
