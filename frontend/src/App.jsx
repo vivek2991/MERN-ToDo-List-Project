@@ -4,6 +4,8 @@ import { Route, Routes } from 'react-router-dom'
 import AddTask from './components/AddTask'
 import List from './components/List'
 import UpdateTask from './components/UpdateTask'
+import Signup from './components/Signup'
+import Login from './components/Login'
 
 function App() {
 
@@ -14,6 +16,8 @@ function App() {
         <Route path='/' element={<List />} />
         <Route path='/add' element={<AddTask />}/>
         <Route path='/update/:id' element={<UpdateTask />}/>
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
       </Routes>
     </>
   )

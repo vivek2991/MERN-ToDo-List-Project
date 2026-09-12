@@ -1,0 +1,29 @@
+import { useState } from 'react'
+import '../style/addtask.css'
+import { Link } from 'react-router-dom';
+
+export default function Login() {
+
+    const [userData, setUserData] = useState();
+
+    
+    return (
+        <>
+            <div className="container">
+                <h1>Login</h1>
+
+                <label htmlFor="">Email</label>
+                <input onChange={(event)=>setUserData({...userData,email:event.target.value})} type="text" name="email" placeholder="Enter User Email" />
+
+                <label htmlFor="">Password</label>
+                <input onChange={(event)=>setUserData({...userData,password:event.target.value})} type="password" name="password" placeholder="Enter Password" />
+
+                <button onClick={()=>console.log(userData)
+                } className="submit">Login</button>
+
+                <Link className='link' to="/signup">Sign Up</Link>
+
+            </div>
+        </>
+    )
+}
