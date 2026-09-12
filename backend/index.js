@@ -32,4 +32,26 @@ app.post("/add-task", async (req, resp) => {
     }
 })
 
+// API for list all the tasks
+// GET - http://localhost:3200/tasks
+app.get("/tasks", async (req, resp) => {
+    const db = await connection();
+    const collection = await db.collection(collectionName);
+    const result = await collection.find().toArray();
+    
+    if(result){
+        resp.send({
+            message: 'Task List fetched',
+            success: true,
+            result: result
+        })
+    } else{
+        resp.send({
+            message: 'Error! Try after some time.',
+            success: false
+        })
+    }
+})
+
+
 app.listen(3200);

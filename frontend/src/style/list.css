@@ -1,0 +1,21 @@
+.task-list{
+    display: grid;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 20px;
+    grid-template-columns: 60px 1fr 2fr;
+}
+
+.list-header{
+    font-weight: bold;
+    padding: 10px;
+    border:  1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+.list-item{
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
