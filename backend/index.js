@@ -76,6 +76,30 @@ app.get("/task/:id", async (req, resp) => {
     }
 })
 
+// API for update single task
+// GET - http://localhost:3200/update-task
+app.put("/update-task", async (req, resp) => {
+    const db = await connection();
+    const {_id,...fields} = req.body;
+    const collection = await db.collection(collectionName);
+
+    const update = {$set:fields}
+    const result = await collection.updateOne({_id:new ObjectId(_id)}, update)
+    
+    if(result){
+        resp.send({
+            message: 'Task Updated',
+            success: true,
+            result: result
+        })
+    } else{
+        resp.send({
+            message: 'Error! Try after some time.',
+            success: false
+        })
+    }
+})
+
 // API for delete single task
 // delete - http://localhost:3200/delete/id
 app.delete("/delete/:id", async (req, resp) => {
