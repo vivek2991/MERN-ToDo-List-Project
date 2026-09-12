@@ -4,7 +4,7 @@
     list-style: none;
     padding: 0;
     margin: 20px;
-    grid-template-columns: 60px 1fr 2fr 200px;
+    grid-template-columns: 100px 60px 1fr 2fr 200px;
 }
 
 .list-header{
@@ -54,3 +54,12 @@
     background-color: green;
 }
 
+.delete-multiple{
+    width: 100px;
+    margin-left: 20px;
+}
+
+.list-container{
+    margin-left: 20px;
+    margin-right: 20px;
+}

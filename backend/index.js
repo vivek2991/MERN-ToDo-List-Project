@@ -122,5 +122,27 @@ app.delete("/delete/:id", async (req, resp) => {
     }
 })
 
+// API for multiple task delete
+// delete - http://localhost:3200/delete/id
+app.delete("/delete-multiple", async (req, resp) => {
+    const ids = req.body;
+    const deleteTaskIds = ids.map((item)=>new ObjectId(item))
+    const db = await connection();
+    const collection = await db.collection(collectionName);
+    const result = await collection.deleteMany({_id:{$in:deleteTaskIds}});
+    
+    if(result){
+        resp.send({
+            message: 'Task Deleted',
+            success: result
+        })
+    } else{
+        resp.send({
+            message: 'Error! Try after some time.',
+            success: false
+        })
+    }
+})
+
 
 app.listen(3200);
