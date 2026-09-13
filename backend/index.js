@@ -38,6 +38,35 @@ app.post("/signup", async (req, resp) => {
     }
 })
 
+// Login API using jsonwebtoke - jwt
+// POST - http://localhost:3200/login
+// {
+//   "email": "vk@google.com",
+//   "password": "123456"
+// }
+app.post("/login", async (req, resp) => {
+    const userData = req.body;
+    if (userData.email && userData.password) {
+        const db = await connection();
+        const collection = await db.collection('users');
+        const result = await collection.findOne({email:userData.email, password:userData.password});
+        if (result) {
+            jwt.sign(userData, 'Google', { expiresIn: '5d' }, (error, token) => {
+                resp.send({
+                    success: true,
+                    message: 'Login Done',
+                    token
+                })
+            })
+        } else {
+            resp.send({
+                success: false,
+                message: 'Error in login. Try again later'
+            })
+        }
+    }
+})
+
 // POST - http://localhost:3200/add-task
 // Add task api - Body - JSON
 // {
