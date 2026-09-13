@@ -10,6 +10,11 @@ app.use(express.json());
 app.use(cors());
 
 // signup API using jsonwebtoke - jwt
+// POST - http://localhost:3200/signup
+// {
+//   "email": "vk@google.com",
+//   "password": "123456"
+// }
 app.post("/signup", async (req, resp) => {
     const userData = req.body;
     if (userData.email && userData.password) {
