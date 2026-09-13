@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import '../style/addtask.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
     const [userData, setUserData] = useState();
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(localStorage.getItem('login')){
+            navigate("/");
+        }
+    })
 
     const handleLogin = async () => {
         console.log(userData);
@@ -17,10 +24,12 @@ export default function Login() {
             }
         })
         result = await result.json();
-        if(result){
-            //navigate("/")
-            console.log(result);
+        if(result.success){
+            localStorage.setItem('login', userData.email)
             document.cookie = "token="+result.token;
+            navigate("/")
+        } else {
+            alert("Try after sometime.")
         }
     }
     

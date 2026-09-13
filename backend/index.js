@@ -118,21 +118,6 @@ app.get("/tasks", verifyJWTToken, async (req, resp) => {
     }
 })
 
-function verifyJWTToken(req, resp, next) {
-    //console.log("verifyJWTToken", req.cookies['token']);
-    const token = req.cookies['token'];
-    jwt.verify(token, 'Google', (error, decoded) => {
-        if(error){
-            return resp.send({
-                msg: 'Invalid Toke',
-                success: false
-            });
-        }
-        next();
-        //console.log(decoded);
-    })
-}
-
 // API for auto populate when click on update button of any task
 // GET - http://localhost:3200/task/6aa4f0a15b600b013edf12b1
 app.get("/task/:id", async (req, resp) => {
@@ -223,5 +208,19 @@ app.delete("/delete-multiple", async (req, resp) => {
     }
 })
 
+function verifyJWTToken(req, resp, next) {
+    //console.log("verifyJWTToken", req.cookies['token']);
+    const token = req.cookies['token'];
+    jwt.verify(token, 'Google', (error, decoded) => {
+        if(error){
+            return resp.send({
+                msg: 'Invalid Toke',
+                success: false
+            });
+        }
+        next();
+        //console.log(decoded);
+    })
+}
 
 app.listen(3200);

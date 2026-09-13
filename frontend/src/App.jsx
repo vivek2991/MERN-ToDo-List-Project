@@ -6,6 +6,7 @@ import List from './components/List'
 import UpdateTask from './components/UpdateTask'
 import Signup from './components/Signup'
 import Login from './components/Login'
+import Protected from './components/Protected'
 
 function App() {
 
@@ -13,8 +14,8 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path='/' element={<List />} />
-        <Route path='/add' element={<AddTask />}/>
+        <Route path='/' element={<Protected><List /></Protected>} />
+        <Route path='/add' element={<Protected><AddTask /></Protected>}/>
         <Route path='/update/:id' element={<UpdateTask />}/>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
