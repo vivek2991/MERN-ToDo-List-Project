@@ -3,11 +3,16 @@ import { collectionName, connection } from './dbconfig.js';
 import cors from 'cors'
 import { ObjectId } from 'mongodb';
 import jwt from 'jsonwebtoken'
+import cookieParser from 'cookie-parser'
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+app.use(cookieParser());
 
 // signup API using jsonwebtoke - jwt
 // POST - http://localhost:3200/signup
@@ -49,7 +54,7 @@ app.post("/login", async (req, resp) => {
     if (userData.email && userData.password) {
         const db = await connection();
         const collection = await db.collection('users');
-        const result = await collection.findOne({email:userData.email, password:userData.password});
+        const result = await collection.findOne({ email: userData.email, password: userData.password });
         if (result) {
             jwt.sign(userData, 'Google', { expiresIn: '5d' }, (error, token) => {
                 resp.send({
@@ -94,7 +99,7 @@ app.post("/add-task", async (req, resp) => {
 
 // API for list all the tasks
 // GET - http://localhost:3200/tasks
-app.get("/tasks", async (req, resp) => {
+app.get("/tasks", verifyJWTToken, async (req, resp) => {
     const db = await connection();
     const collection = await db.collection(collectionName);
     const result = await collection.find().toArray();
@@ -112,6 +117,21 @@ app.get("/tasks", async (req, resp) => {
         })
     }
 })
+
+function verifyJWTToken(req, resp, next) {
+    //console.log("verifyJWTToken", req.cookies['token']);
+    const token = req.cookies['token'];
+    jwt.verify(token, 'Google', (error, decoded) => {
+        if(error){
+            return resp.send({
+                msg: 'Invalid Toke',
+                success: false
+            });
+        }
+        next();
+        //console.log(decoded);
+    })
+}
 
 // API for auto populate when click on update button of any task
 // GET - http://localhost:3200/task/6aa4f0a15b600b013edf12b1
