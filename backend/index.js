@@ -2,11 +2,36 @@ import express from 'express';
 import { collectionName, connection } from './dbconfig.js';
 import cors from 'cors'
 import { ObjectId } from 'mongodb';
+import jwt from 'jsonwebtoken'
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+// signup API using jsonwebtoke - jwt
+app.post("/signup", async (req, resp) => {
+    const userData = req.body;
+    if (userData.email && userData.password) {
+        const db = await connection();
+        const collection = await db.collection('users');
+        const result = await collection.insertOne(userData);
+        if (result) {
+            jwt.sign(userData, 'Google', { expiresIn: '5d' }, (error, token) => {
+                resp.send({
+                    success: true,
+                    message: 'Signup Done',
+                    token
+                })
+            })
+        } else {
+            resp.send({
+                success: false,
+                message: 'Error in sign up. Try again later'
+            })
+        }
+    }
+})
 
 // POST - http://localhost:3200/add-task
 // Add task api - Body - JSON
@@ -18,13 +43,13 @@ app.post("/add-task", async (req, resp) => {
     const db = await connection();
     const collection = await db.collection(collectionName);
     const result = await collection.insertOne(req.body);
-    if(result){
+    if (result) {
         resp.send({
             message: 'New Task Added',
             success: true,
             result: result
         })
-    } else{
+    } else {
         resp.send({
             message: 'Task Not Added',
             success: false,
@@ -39,14 +64,14 @@ app.get("/tasks", async (req, resp) => {
     const db = await connection();
     const collection = await db.collection(collectionName);
     const result = await collection.find().toArray();
-    
-    if(result){
+
+    if (result) {
         resp.send({
             message: 'Task List fetched',
             success: true,
             result: result
         })
-    } else{
+    } else {
         resp.send({
             message: 'Error! Try after some time.',
             success: false
@@ -60,15 +85,15 @@ app.get("/task/:id", async (req, resp) => {
     const db = await connection();
     const id = req.params.id;
     const collection = await db.collection(collectionName);
-    const result = await collection.findOne({_id:new ObjectId(id)});
-    
-    if(result){
+    const result = await collection.findOne({ _id: new ObjectId(id) });
+
+    if (result) {
         resp.send({
             message: 'Task fetched',
             success: true,
             result: result
         })
-    } else{
+    } else {
         resp.send({
             message: 'Error! Try after some time.',
             success: false
@@ -80,19 +105,19 @@ app.get("/task/:id", async (req, resp) => {
 // GET - http://localhost:3200/update-task
 app.put("/update-task", async (req, resp) => {
     const db = await connection();
-    const {_id,...fields} = req.body;
+    const { _id, ...fields } = req.body;
     const collection = await db.collection(collectionName);
 
-    const update = {$set:fields}
-    const result = await collection.updateOne({_id:new ObjectId(_id)}, update)
-    
-    if(result){
+    const update = { $set: fields }
+    const result = await collection.updateOne({ _id: new ObjectId(_id) }, update)
+
+    if (result) {
         resp.send({
             message: 'Task Updated',
             success: true,
             result: result
         })
-    } else{
+    } else {
         resp.send({
             message: 'Error! Try after some time.',
             success: false
@@ -106,15 +131,15 @@ app.delete("/delete/:id", async (req, resp) => {
     const id = req.params.id;
     const db = await connection();
     const collection = await db.collection(collectionName);
-    const result = await collection.deleteOne({_id:new ObjectId(id)});
-    
-    if(result){
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+
+    if (result) {
         resp.send({
             message: 'Task Deleted',
             success: true,
             result: result
         })
-    } else{
+    } else {
         resp.send({
             message: 'Error! Try after some time.',
             success: false
@@ -126,17 +151,17 @@ app.delete("/delete/:id", async (req, resp) => {
 // delete - http://localhost:3200/delete/id
 app.delete("/delete-multiple", async (req, resp) => {
     const ids = req.body;
-    const deleteTaskIds = ids.map((item)=>new ObjectId(item))
+    const deleteTaskIds = ids.map((item) => new ObjectId(item))
     const db = await connection();
     const collection = await db.collection(collectionName);
-    const result = await collection.deleteMany({_id:{$in:deleteTaskIds}});
-    
-    if(result){
+    const result = await collection.deleteMany({ _id: { $in: deleteTaskIds } });
+
+    if (result) {
         resp.send({
             message: 'Task Deleted',
             success: result
         })
-    } else{
+    } else {
         resp.send({
             message: 'Error! Try after some time.',
             success: false
