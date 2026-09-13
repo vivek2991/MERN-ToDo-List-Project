@@ -19,15 +19,21 @@ export default function List() {
 
         if (list.success) {
             setTaskData(list.result)
+        } else {
+            alert("Try after sometimes!")
         }
     }
 
     const deleteTask = async (id) => {
-        let item = await fetch('http://localhost:3200/delete/' + id, { method: 'delete' });
+        let item = await fetch('http://localhost:3200/delete/' + id, { method: 'delete',
+            credentials: 'include',
+        });
         item = await item.json();
 
         if (item.success) {
             getListData();
+        } else {
+            alert("Try after sometimes!")
         }
     }
 
@@ -54,6 +60,7 @@ export default function List() {
             {
                 method: 'delete',
                 body: JSON.stringify(selectedTask),
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'Application/Json'
                 }
@@ -62,6 +69,8 @@ export default function List() {
 
         if (item.success) {
             getListData();
+        } else {
+            alert("Try after sometimes!")
         }
     }
 

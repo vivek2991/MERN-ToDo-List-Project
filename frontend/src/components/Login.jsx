@@ -27,6 +27,7 @@ export default function Login() {
         if(result.success){
             localStorage.setItem('login', userData.email)
             document.cookie = "token="+result.token;
+            window.dispatchEvent(new Event('localStorage-change'))
             navigate("/")
         } else {
             alert("Try after sometime.")

@@ -78,7 +78,7 @@ app.post("/login", async (req, resp) => {
 //   "title": "Test 4",
 //   "description": "Description of Test 4"
 // }
-app.post("/add-task", async (req, resp) => {
+app.post("/add-task", verifyJWTToken, async (req, resp) => {
     const db = await connection();
     const collection = await db.collection(collectionName);
     const result = await collection.insertOne(req.body);
@@ -120,7 +120,7 @@ app.get("/tasks", verifyJWTToken, async (req, resp) => {
 
 // API for auto populate when click on update button of any task
 // GET - http://localhost:3200/task/6aa4f0a15b600b013edf12b1
-app.get("/task/:id", async (req, resp) => {
+app.get("/task/:id", verifyJWTToken, async (req, resp) => {
     const db = await connection();
     const id = req.params.id;
     const collection = await db.collection(collectionName);
@@ -142,7 +142,7 @@ app.get("/task/:id", async (req, resp) => {
 
 // API for update single task
 // GET - http://localhost:3200/update-task
-app.put("/update-task", async (req, resp) => {
+app.put("/update-task", verifyJWTToken, async (req, resp) => {
     const db = await connection();
     const { _id, ...fields } = req.body;
     const collection = await db.collection(collectionName);
@@ -166,7 +166,7 @@ app.put("/update-task", async (req, resp) => {
 
 // API for delete single task
 // delete - http://localhost:3200/delete/id
-app.delete("/delete/:id", async (req, resp) => {
+app.delete("/delete/:id", verifyJWTToken, async (req, resp) => {
     const id = req.params.id;
     const db = await connection();
     const collection = await db.collection(collectionName);
@@ -188,7 +188,7 @@ app.delete("/delete/:id", async (req, resp) => {
 
 // API for multiple task delete
 // delete - http://localhost:3200/delete/id
-app.delete("/delete-multiple", async (req, resp) => {
+app.delete("/delete-multiple", verifyJWTToken, async (req, resp) => {
     const ids = req.body;
     const deleteTaskIds = ids.map((item) => new ObjectId(item))
     const db = await connection();
